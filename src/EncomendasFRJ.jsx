@@ -156,26 +156,78 @@ const EnvelopeForm = ({ darkMode, onSave }) => {
   );
 };
 
+// Componente para o formulário de observações com tema vermelho
+const ObservacoesForm = ({ darkMode, onSave, onResolve, onDelete, observacoes }) => {
+  const [texto, setTexto] = useState("");
+
+  const handleChange = (e) => {
+    setTexto(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    if (!texto.trim()) return;
+    const novaObservacao = { id: Date.now(), observacao: texto, status: "pendente" };
+    onSave(novaObservacao);
+    setTexto("");
+  };
+
+  return (
+    <div className={`form-container ${darkMode ? 'form-container-dark' : 'form-container-light'}`}>
+      <h2 className="form-heading form-heading-observacoes">Registrar Observação</h2>
+      <textarea
+        value={texto}
+        onChange={handleChange}
+        placeholder="Digite sua observação..."
+        className={`form-input ${darkMode ? 'form-input-dark' : 'form-input-light'}`}
+      />
+      <button onClick={handleSubmit} className="submit-button submit-button-observacoes">
+        Salvar
+      </button>
+      <ul className="item-list">
+        {observacoes.map(obs => (
+          <li key={obs.id} className={`item-card ${darkMode ? 'item-card-dark' : 'item-card-light'}`}>
+            <div className="item-title">Observação</div>
+            <div className="item-description">{obs.observacao}</div>
+            <div className={`item-status ${obs.status === "pendente" ? 'item-status-pendente' : 'item-status-resolvido'}`}>
+              Status: {obs.status}
+            </div>
+            <div>
+              {obs.status === "pendente" && (
+                <button onClick={() => onResolve(obs.id)} className="action-button action-button-observacoes">
+                  Resolvido
+                </button>
+              )}
+              <button onClick={() => onDelete(obs.id)} className="action-button action-button-delete">
+                Apagar
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
 // Componente principal
 const EncomendasFRJ = () => {
   const [activeTab, setActiveTab] = useState("encomendas");
   const [darkMode, setDarkMode] = useState(() => {
-    // Recupera o tema salvo no localStorage ou usa "light" como padrão
     const savedTheme = localStorage.getItem("theme");
     return savedTheme ? savedTheme === "dark" : false;
   });
   const [pesquisa, setPesquisa] = useState("");
   const [encomendas, setEncomendas] = useState([]);
   const [envelopes, setEnvelopes] = useState([]);
+  const [observacoes, setObservacoes] = useState([]);
 
   useEffect(() => {
-    // Salva o tema no localStorage sempre que ele mudar
     localStorage.setItem("theme", darkMode ? "dark" : "light");
   }, [darkMode]);
 
   useEffect(() => {
     setEncomendas(JSON.parse(localStorage.getItem("encomendas")) || []);
     setEnvelopes(JSON.parse(localStorage.getItem("envelopes")) || []);
+    setObservacoes(JSON.parse(localStorage.getItem("observacoes")) || []);
   }, []);
 
   const salvarEncomenda = (formData) => {
@@ -190,6 +242,26 @@ const EncomendasFRJ = () => {
     const updatedEnvelopes = [...envelopes, novoEnvelope];
     setEnvelopes(updatedEnvelopes);
     localStorage.setItem("envelopes", JSON.stringify(updatedEnvelopes));
+  };
+
+  const salvarObservacao = (observacaoData) => {
+    const updatedObservacoes = [...observacoes, observacaoData];
+    setObservacoes(updatedObservacoes);
+    localStorage.setItem("observacoes", JSON.stringify(updatedObservacoes));
+  };
+
+  const resolverObservacao = (id) => {
+    const updatedObservacoes = observacoes.map(obs =>
+      obs.id === id ? { ...obs, status: "resolvido" } : obs
+    );
+    setObservacoes(updatedObservacoes);
+    localStorage.setItem("observacoes", JSON.stringify(updatedObservacoes));
+  };
+
+  const apagarObservacao = (id) => {
+    const updatedObservacoes = observacoes.filter(obs => obs.id !== id);
+    setObservacoes(updatedObservacoes);
+    localStorage.setItem("observacoes", JSON.stringify(updatedObservacoes));
   };
 
   const alterarStatus = (id, isEnvelope) => {
@@ -261,6 +333,12 @@ const EncomendasFRJ = () => {
         >
           Envelopes
         </button>
+        <button
+          onClick={() => setActiveTab("observacoes")}
+          className={`tab-button ${activeTab === "observacoes" ? 'tab-button-observacoes' : 'tab-button-observacoes-inactive'}`}
+        >
+          Observações
+        </button>
       </div>
 
       <input
@@ -271,7 +349,7 @@ const EncomendasFRJ = () => {
       />
 
       <div className="slider-container">
-        <div className={`slider-content ${activeTab === "encomendas" ? 'slider-content-encomendas' : 'slider-content-envelopes'}`}>
+        {activeTab === "encomendas" && (
           <div className={`form-container ${darkMode ? 'form-container-dark' : 'form-container-light'}`}>
             <EncomendaForm darkMode={darkMode} onSave={salvarEncomenda} />
             <ul className="item-list">
@@ -306,7 +384,9 @@ const EncomendasFRJ = () => {
               ))}
             </ul>
           </div>
+        )}
 
+        {activeTab === "envelopes" && (
           <div className={`form-container ${darkMode ? 'form-container-dark' : 'form-container-light'}`}>
             <EnvelopeForm darkMode={darkMode} onSave={salvarEnvelope} />
             <ul className="item-list">
@@ -341,7 +421,17 @@ const EncomendasFRJ = () => {
               ))}
             </ul>
           </div>
-        </div>
+        )}
+
+        {activeTab === "observacoes" && (
+          <ObservacoesForm
+            darkMode={darkMode}
+            observacoes={observacoes}
+            onSave={salvarObservacao}
+            onResolve={resolverObservacao}
+            onDelete={apagarObservacao}
+          />
+        )}
       </div>
     </div>
   );

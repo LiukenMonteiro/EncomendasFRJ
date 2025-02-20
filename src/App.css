@@ -314,3 +314,92 @@
   border-radius: 50%;
   margin-right: 5px;
 }
+/* Aba de Observações - Tema Vermelho */
+
+/* Botão da aba de Observações */
+.tab-button-observacoes {
+  background-color: #d32f2f; /* vermelho vibrante */
+  color: #fff;
+}
+.tab-button-observacoes-inactive {
+  background-color: #ccc;
+  color: #333;
+}
+
+/* Cabeçalho do formulário de Observações */
+.form-heading-observacoes {
+  color: #d32f2f;
+}
+
+/* Botão de submissão para Observações */
+.submit-button-observacoes {
+  background-color: #d32f2f;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+/* Container do formulário de Observações (para maior largura) */
+.observacoes-container {
+  width: 90%;           /* Mais amplo */
+  max-width: 600px;     /* Tamanho máximo ajustado */
+  margin: 0 auto;       /* Centralizado */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff; /* Para o modo claro */
+}
+
+.observacoes-container-dark {
+  background-color: #333;    /* Para o modo escuro */
+}
+
+/* Ajuste para os formulários ocuparem mais espaço na tela */
+.form-container {
+  width: 90%;            /* Aumenta a largura para 90% da tela */
+  max-width: 800px;      /* Define um limite máximo para manter o layout harmonioso */
+  margin: 0 auto;        /* Centraliza o container horizontalmente */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Botão "Resolvido" na aba de Observações */
+.action-button-observacoes {
+  background-color: #388e3c; /* Verde vibrante */
+  color: #fff;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.action-button-observacoes:hover {
+  background-color: #2e7d32; /* Verde mais escuro no hover */
+}
+
+/* Status "resolvido" com bolinha verde */
+.item-status-resolvido {
+  position: relative;
+  padding-left: 20px;
+  color: #388e3c;
+  font-weight: bold;
+}
+
+.item-status-resolvido::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  background-color: #388e3c;
+  border-radius: 50%;
+  margin-right: 5px;
+}
