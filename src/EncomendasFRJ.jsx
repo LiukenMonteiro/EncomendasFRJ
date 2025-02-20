@@ -354,96 +354,95 @@ const EncomendasFRJ = () => {
         className={`search-input ${darkMode ? 'search-input-dark' : 'search-input-light'}`}
       />
 
-<div className="slider-container">
+      <div className="content-container">
         {activeTab === "encomendas" && (
           <>
             <div className={`form-container ${darkMode ? 'form-container-dark' : 'form-container-light'}`}>
               <EncomendaForm darkMode={darkMode} onSave={salvarEncomenda} />
             </div>
-            <div style={{ maxHeight: 'calc(100vh - 400px)', overflowY: 'auto', padding: '10px 0' }}>
+            <div className="list-container">
               <ul className="item-list">
                 {filtrarItens(encomendas).map(item => (
-                <li key={item.id} className={`item-card ${darkMode ? 'item-card-dark' : 'item-card-light'}`}>
-                  <div className="item-title item-title-encomendas">{item.nome}</div>
-                  <div className={`item-description ${darkMode ? 'item-description-dark' : 'item-description-light'}`}>
-                    {item.descricao}
-                  </div>
-                  <div className={`item-description ${darkMode ? 'item-description-dark' : 'item-description-light'}`}>
-                    Bloco {item.bloco} - AP{item.apartamento} - Compartimento {item.compartimento}
-                  </div>
-                  <div className={`item-status ${item.status === "postado" ? 'item-status-posted' : 'item-status-delivered'}`}>
-                    {item.status === "entregue" && <span className="status-indicator"></span>}
-                    Status: {item.status}
-                  </div>
-                  <div>
-                    <button
-                      onClick={() => alterarStatus(item.id, false)}
-                      className={`action-button ${item.status === "entregue" ? "action-button-delivered" : "action-button-status-encomendas"}`}
-                    >
-                      {item.status === "postado" ? "Marcar como entregue" : "Marcar como postado"}
-                    </button>
-                    <button onClick={() => copiarInformacoes(item, false)} className="action-button action-button-copy">
-                      Copiar
-                    </button>
-                    <button onClick={() => apagarItem(item.id, false)} className="action-button action-button-delete">
-                      Apagar
-                    </button>
-                  </div>
-                </li>
-              ))}
+                  <li key={item.id} className={`item-card ${darkMode ? 'item-card-dark' : 'item-card-light'}`}>
+                    <div className="item-title item-title-encomendas">{item.nome}</div>
+                    <div className={`item-description ${darkMode ? 'item-description-dark' : 'item-description-light'}`}>
+                      {item.descricao}
+                    </div>
+                    <div className={`item-description ${darkMode ? 'item-description-dark' : 'item-description-light'}`}>
+                      Bloco {item.bloco} - AP{item.apartamento} - Compartimento {item.compartimento}
+                    </div>
+                    <div className={`item-status ${item.status === "postado" ? 'item-status-posted' : 'item-status-delivered'}`}>
+                      {item.status === "entregue" && <span className="status-indicator"></span>}
+                      Status: {item.status}
+                    </div>
+                    <div>
+                      <button
+                        onClick={() => alterarStatus(item.id, false)}
+                        className={`action-button ${item.status === "entregue" ? "action-button-delivered" : "action-button-status-encomendas"}`}
+                      >
+                        {item.status === "postado" ? "Marcar como entregue" : "Marcar como postado"}
+                      </button>
+                      <button onClick={() => copiarInformacoes(item, false)} className="action-button action-button-copy">
+                        Copiar
+                      </button>
+                      <button onClick={() => apagarItem(item.id, false)} className="action-button action-button-delete">
+                        Apagar
+                      </button>
+                    </div>
+                  </li>
+                ))}
               </ul>
             </div>
           </>
         )}
 
-{activeTab === "envelopes" && (
+        {activeTab === "envelopes" && (
           <>
             <div className={`form-container ${darkMode ? 'form-container-dark' : 'form-container-light'}`}>
               <EnvelopeForm darkMode={darkMode} onSave={salvarEnvelope} />
             </div>
-            <div style={{ maxHeight: 'calc(100vh - 400px)', overflowY: 'auto', padding: '10px 0' }}>
+            <div className="list-container">
               <ul className="item-list">
                 {filtrarItens(envelopes).map(item => (
-                <li key={item.id} className={`item-card ${darkMode ? 'item-card-dark' : 'item-card-light'}`}>
-                  <div className="item-title item-title-envelopes">{item.nome}</div>
-                  <div className={`item-description ${darkMode ? 'item-description-dark' : 'item-description-light'}`}>
-                    {item.descricao}
-                  </div>
-                  <div className={`item-description ${darkMode ? 'item-description-dark' : 'item-description-light'}`}>
-                    Bloco {item.bloco} - AP{item.apartamento} - Compartimento {item.compartimento}
-                  </div>
-                  <div className={`item-status ${item.status === "postado" ? 'item-status-posted' : 'item-status-delivered'}`}>
-                    {item.status === "entregue" && <span className="status-indicator"></span>}
-                    Status: {item.status}
-                  </div>
-                  <div>
-                    <button
-                      onClick={() => alterarStatus(item.id, true)}
-                      className={`action-button ${item.status === "entregue" ? "action-button-delivered" : "action-button-status-envelopes"}`}
-                    >
-                      {item.status === "postado" ? "Marcar como entregue" : "Marcar como postado"}
-                    </button>
-                    <button onClick={() => copiarInformacoes(item, true)} className="action-button action-button-copy">
-                      Copiar
-                    </button>
-                    <button onClick={() => apagarItem(item.id, true)} className="action-button action-button-delete">
-                      Apagar
-                    </button>
-                  </div>
-                </li>
-              ))}
+                  <li key={item.id} className={`item-card ${darkMode ? 'item-card-dark' : 'item-card-light'}`}>
+                    <div className="item-title item-title-envelopes">{item.nome}</div>
+                    <div className={`item-description ${darkMode ? 'item-description-dark' : 'item-description-light'}`}>
+                      {item.descricao}
+                    </div>
+                    <div className={`item-description ${darkMode ? 'item-description-dark' : 'item-description-light'}`}>
+                      Bloco {item.bloco} - AP{item.apartamento} - Compartimento {item.compartimento}
+                    </div>
+                    <div className={`item-status ${item.status === "postado" ? 'item-status-posted' : 'item-status-delivered'}`}>
+                      {item.status === "entregue" && <span className="status-indicator"></span>}
+                      Status: {item.status}
+                    </div>
+                    <div>
+                      <button
+                        onClick={() => alterarStatus(item.id, true)}
+                        className={`action-button ${item.status === "entregue" ? "action-button-delivered" : "action-button-status-envelopes"}`}
+                      >
+                        {item.status === "postado" ? "Marcar como entregue" : "Marcar como postado"}
+                      </button>
+                      <button onClick={() => copiarInformacoes(item, true)} className="action-button action-button-copy">
+                        Copiar
+                      </button>
+                      <button onClick={() => apagarItem(item.id, true)} className="action-button action-button-delete">
+                        Apagar
+                      </button>
+                    </div>
+                  </li>
+                ))}
               </ul>
             </div>
           </>
         )}
 
-{activeTab === "observacoes" && (
+        {activeTab === "observacoes" && (
           <>
-            <ObservacoesForm
-              darkMode={darkMode}
-              onSave={salvarObservacao}
-            />
-            <div style={{ maxHeight: 'calc(100vh - 400px)', overflowY: 'auto', padding: '10px 0' }}>
+            <div className={`form-container ${darkMode ? 'form-container-dark' : 'form-container-light'}`}>
+              <ObservacoesForm darkMode={darkMode} onSave={salvarObservacao} />
+            </div>
+            <div className="list-container">
               <ObservacoesList
                 darkMode={darkMode}
                 observacoes={observacoes}
