@@ -174,7 +174,7 @@ const ObservacoesForm = ({ darkMode, onSave }) => {
   return (
     <div className={`form-container ${darkMode ? 'form-container-dark' : 'form-container-light'}`}>
       <h2 className="form-heading form-heading-observacoes">Registrar Observação</h2>
-      <textarea
+      <textarea rows={12}
         value={texto}
         onChange={handleChange}
         placeholder="Digite sua observação..."
