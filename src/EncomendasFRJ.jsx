@@ -156,8 +156,8 @@ const EnvelopeForm = ({ darkMode, onSave }) => {
   );
 };
 
-// Componente para o formulário de observações com tema vermelho
-const ObservacoesForm = ({ darkMode, onSave, onResolve, onDelete, observacoes }) => {
+// Componente para o formulário de observações
+const ObservacoesForm = ({ darkMode, onSave }) => {
   const [texto, setTexto] = useState("");
 
   const handleChange = (e) => {
@@ -183,28 +183,34 @@ const ObservacoesForm = ({ darkMode, onSave, onResolve, onDelete, observacoes })
       <button onClick={handleSubmit} className="submit-button submit-button-observacoes">
         Salvar
       </button>
-      <ul className="item-list">
-        {observacoes.map(obs => (
-          <li key={obs.id} className={`item-card ${darkMode ? 'item-card-dark' : 'item-card-light'}`}>
-            <div className="item-title">Observação</div>
-            <div className="item-description">{obs.observacao}</div>
-            <div className={`item-status ${obs.status === "pendente" ? 'item-status-pendente' : 'item-status-resolvido'}`}>
-              Status: {obs.status}
-            </div>
-            <div>
-              {obs.status === "pendente" && (
-                <button onClick={() => onResolve(obs.id)} className="action-button action-button-observacoes">
-                  Resolvido
-                </button>
-              )}
-              <button onClick={() => onDelete(obs.id)} className="action-button action-button-delete">
-                Apagar
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
     </div>
+  );
+};
+
+// Lista de observações separada
+const ObservacoesList = ({ darkMode, observacoes, onResolve, onDelete }) => {
+  return (
+    <ul className="item-list">
+      {observacoes.map(obs => (
+        <li key={obs.id} className={`item-card ${darkMode ? 'item-card-dark' : 'item-card-light'}`}>
+          <div className="item-title">Observação</div>
+          <div className="item-description">{obs.observacao}</div>
+          <div className={`item-status ${obs.status === "pendente" ? 'item-status-pendente' : 'item-status-resolvido'}`}>
+            Status: {obs.status}
+          </div>
+          <div>
+            {obs.status === "pendente" && (
+              <button onClick={() => onResolve(obs.id)} className="action-button action-button-observacoes">
+                Resolvido
+              </button>
+            )}
+            <button onClick={() => onDelete(obs.id)} className="action-button action-button-delete">
+              Apagar
+            </button>
+          </div>
+        </li>
+      ))}
+    </ul>
   );
 };
 
@@ -348,12 +354,15 @@ const EncomendasFRJ = () => {
         className={`search-input ${darkMode ? 'search-input-dark' : 'search-input-light'}`}
       />
 
-      <div className="slider-container">
+<div className="slider-container">
         {activeTab === "encomendas" && (
-          <div className={`form-container ${darkMode ? 'form-container-dark' : 'form-container-light'}`}>
-            <EncomendaForm darkMode={darkMode} onSave={salvarEncomenda} />
-            <ul className="item-list">
-              {filtrarItens(encomendas).map(item => (
+          <>
+            <div className={`form-container ${darkMode ? 'form-container-dark' : 'form-container-light'}`}>
+              <EncomendaForm darkMode={darkMode} onSave={salvarEncomenda} />
+            </div>
+            <div style={{ maxHeight: 'calc(100vh - 400px)', overflowY: 'auto', padding: '10px 0' }}>
+              <ul className="item-list">
+                {filtrarItens(encomendas).map(item => (
                 <li key={item.id} className={`item-card ${darkMode ? 'item-card-dark' : 'item-card-light'}`}>
                   <div className="item-title item-title-encomendas">{item.nome}</div>
                   <div className={`item-description ${darkMode ? 'item-description-dark' : 'item-description-light'}`}>
@@ -382,15 +391,19 @@ const EncomendasFRJ = () => {
                   </div>
                 </li>
               ))}
-            </ul>
-          </div>
+              </ul>
+            </div>
+          </>
         )}
 
-        {activeTab === "envelopes" && (
-          <div className={`form-container ${darkMode ? 'form-container-dark' : 'form-container-light'}`}>
-            <EnvelopeForm darkMode={darkMode} onSave={salvarEnvelope} />
-            <ul className="item-list">
-              {filtrarItens(envelopes).map(item => (
+{activeTab === "envelopes" && (
+          <>
+            <div className={`form-container ${darkMode ? 'form-container-dark' : 'form-container-light'}`}>
+              <EnvelopeForm darkMode={darkMode} onSave={salvarEnvelope} />
+            </div>
+            <div style={{ maxHeight: 'calc(100vh - 400px)', overflowY: 'auto', padding: '10px 0' }}>
+              <ul className="item-list">
+                {filtrarItens(envelopes).map(item => (
                 <li key={item.id} className={`item-card ${darkMode ? 'item-card-dark' : 'item-card-light'}`}>
                   <div className="item-title item-title-envelopes">{item.nome}</div>
                   <div className={`item-description ${darkMode ? 'item-description-dark' : 'item-description-light'}`}>
@@ -419,18 +432,26 @@ const EncomendasFRJ = () => {
                   </div>
                 </li>
               ))}
-            </ul>
-          </div>
+              </ul>
+            </div>
+          </>
         )}
 
-        {activeTab === "observacoes" && (
-          <ObservacoesForm
-            darkMode={darkMode}
-            observacoes={observacoes}
-            onSave={salvarObservacao}
-            onResolve={resolverObservacao}
-            onDelete={apagarObservacao}
-          />
+{activeTab === "observacoes" && (
+          <>
+            <ObservacoesForm
+              darkMode={darkMode}
+              onSave={salvarObservacao}
+            />
+            <div style={{ maxHeight: 'calc(100vh - 400px)', overflowY: 'auto', padding: '10px 0' }}>
+              <ObservacoesList
+                darkMode={darkMode}
+                observacoes={observacoes}
+                onResolve={resolverObservacao}
+                onDelete={apagarObservacao}
+              />
+            </div>
+          </>
         )}
       </div>
     </div>
