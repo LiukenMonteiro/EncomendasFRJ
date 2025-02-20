@@ -1,239 +1,348 @@
 import { useState, useEffect } from "react";
+import './App.css';
 
+// Componente para o formulário de encomendas
+const EncomendaForm = ({ darkMode, onSave }) => {
+  const [formData, setFormData] = useState({
+    nome: "",
+    apartamento: "",
+    bloco: "",
+    descricao: "",
+    compartimento: ""
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = () => {
+    if (Object.values(formData).some(val => !val)) return;
+    onSave(formData);
+    setFormData({
+      nome: "",
+      apartamento: "",
+      bloco: "",
+      descricao: "",
+      compartimento: ""
+    });
+  };
+
+  return (
+    <>
+      <h2 className="form-heading form-heading-encomendas">Registrar Encomenda</h2>
+      <input
+        name="nome"
+        value={formData.nome}
+        onChange={handleChange}
+        placeholder="Nome"
+        className={`form-input ${darkMode ? 'form-input-dark' : 'form-input-light'}`}
+      />
+      <div className="input-group">
+        <input
+          name="apartamento"
+          value={formData.apartamento}
+          onChange={handleChange}
+          placeholder="Apartamento"
+          className={`input-group-item ${darkMode ? 'form-input-dark' : 'form-input-light'}`}
+        />
+        <input
+          name="bloco"
+          value={formData.bloco}
+          onChange={handleChange}
+          placeholder="Bloco"
+          className={`input-group-item ${darkMode ? 'form-input-dark' : 'form-input-light'}`}
+        />
+      </div>
+      <input
+        name="descricao"
+        value={formData.descricao}
+        onChange={handleChange}
+        placeholder="Descrição"
+        className={`form-input ${darkMode ? 'form-input-dark' : 'form-input-light'}`}
+      />
+      <select
+        name="compartimento"
+        value={formData.compartimento}
+        onChange={handleChange}
+        className={`form-input ${darkMode ? 'form-input-dark' : 'form-input-light'}`}
+      >
+        <option value="">Selecione o compartimento</option>
+        {[...Array(14)].map((_, i) => (
+          <option key={i} value={`C${i + 1}`}>{`C${i + 1}`}</option>
+        ))}
+        <option value="Fora">Fora</option>
+      </select>
+      <button onClick={handleSubmit} className="submit-button submit-button-encomendas">
+        Salvar
+      </button>
+    </>
+  );
+};
+
+// Componente para o formulário de envelopes
+const EnvelopeForm = ({ darkMode, onSave }) => {
+  const [formData, setFormData] = useState({
+    nome: "",
+    apartamento: "",
+    bloco: "",
+    descricao: "",
+    compartimento: ""
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = () => {
+    if (Object.values(formData).some(val => !val)) return;
+    onSave(formData);
+    setFormData({
+      nome: "",
+      apartamento: "",
+      bloco: "",
+      descricao: "",
+      compartimento: ""
+    });
+  };
+
+  return (
+    <>
+      <h2 className="form-heading form-heading-envelopes">Registrar Envelope</h2>
+      <input
+        name="nome"
+        value={formData.nome}
+        onChange={handleChange}
+        placeholder="Nome"
+        className={`form-input ${darkMode ? 'form-input-dark' : 'form-input-light'}`}
+      />
+      <div className="input-group">
+        <input
+          name="apartamento"
+          value={formData.apartamento}
+          onChange={handleChange}
+          placeholder="Apartamento"
+          className={`input-group-item ${darkMode ? 'form-input-dark' : 'form-input-light'}`}
+        />
+        <input
+          name="bloco"
+          value={formData.bloco}
+          onChange={handleChange}
+          placeholder="Bloco"
+          className={`input-group-item ${darkMode ? 'form-input-dark' : 'form-input-light'}`}
+        />
+      </div>
+      <input
+        name="descricao"
+        value={formData.descricao}
+        onChange={handleChange}
+        placeholder="Descrição"
+        className={`form-input ${darkMode ? 'form-input-dark' : 'form-input-light'}`}
+      />
+      <select
+        name="compartimento"
+        value={formData.compartimento}
+        onChange={handleChange}
+        className={`form-input ${darkMode ? 'form-input-dark' : 'form-input-light'}`}
+      >
+        <option value="">Selecione o compartimento</option>
+        {Array.from({ length: 18 }, (_, i) => String.fromCharCode(65 + i)).map(letter => (
+          <option key={letter} value={letter}>{letter}</option>
+        ))}
+      </select>
+      <button onClick={handleSubmit} className="submit-button submit-button-envelopes">
+        Salvar
+      </button>
+    </>
+  );
+};
+
+// Componente principal
 const EncomendasFRJ = () => {
-  const [encomendas, setEncomendas] = useState([]);
-  const [nome, setNome] = useState("");
-  const [apartamento, setApartamento] = useState("");
-  const [bloco, setBloco] = useState("");
-  const [descricao, setDescricao] = useState("");
-  const [compartimento, setCompartimento] = useState("");
-  const [darkMode, setDarkMode] = useState(false);
+  const [activeTab, setActiveTab] = useState("encomendas");
+  const [darkMode, setDarkMode] = useState(() => {
+    // Recupera o tema salvo no localStorage ou usa "light" como padrão
+    const savedTheme = localStorage.getItem("theme");
+    return savedTheme ? savedTheme === "dark" : false;
+  });
   const [pesquisa, setPesquisa] = useState("");
+  const [encomendas, setEncomendas] = useState([]);
+  const [envelopes, setEnvelopes] = useState([]);
 
   useEffect(() => {
-    const storedEncomendas = JSON.parse(localStorage.getItem("encomendas")) || [];
-    setEncomendas(storedEncomendas);
+    // Salva o tema no localStorage sempre que ele mudar
+    localStorage.setItem("theme", darkMode ? "dark" : "light");
+  }, [darkMode]);
+
+  useEffect(() => {
+    setEncomendas(JSON.parse(localStorage.getItem("encomendas")) || []);
+    setEnvelopes(JSON.parse(localStorage.getItem("envelopes")) || []);
   }, []);
 
-  const salvarEncomenda = () => {
-    if (!nome || !apartamento || !bloco || !descricao || !compartimento) return;
-
-    const novaEncomenda = {
-      id: Date.now(),
-      nome,
-      apartamento,
-      bloco,
-      descricao,
-      compartimento,
-      status: "postado",
-    };
-
+  const salvarEncomenda = (formData) => {
+    const novaEncomenda = { ...formData, id: Date.now(), status: "postado" };
     const updatedEncomendas = [...encomendas, novaEncomenda];
     setEncomendas(updatedEncomendas);
     localStorage.setItem("encomendas", JSON.stringify(updatedEncomendas));
-
-    setNome("");
-    setApartamento("");
-    setBloco("");
-    setDescricao("");
-    setCompartimento("");
   };
 
-  const copiarInformacoes = (encomenda) => {
-    const texto = `${encomenda.descricao} ${encomenda.compartimento}, AP${encomenda.apartamento}, Bloco ${encomenda.bloco}`;
+  const salvarEnvelope = (formData) => {
+    const novoEnvelope = { ...formData, id: Date.now(), status: "postado" };
+    const updatedEnvelopes = [...envelopes, novoEnvelope];
+    setEnvelopes(updatedEnvelopes);
+    localStorage.setItem("envelopes", JSON.stringify(updatedEnvelopes));
+  };
+
+  const alterarStatus = (id, isEnvelope) => {
+    const updateItems = (items) =>
+      items.map(item =>
+        item.id === id ? { ...item, status: item.status === "postado" ? "entregue" : "postado" } : item
+      );
+
+    if (isEnvelope) {
+      const updated = updateItems(envelopes);
+      setEnvelopes(updated);
+      localStorage.setItem("envelopes", JSON.stringify(updated));
+    } else {
+      const updated = updateItems(encomendas);
+      setEncomendas(updated);
+      localStorage.setItem("encomendas", JSON.stringify(updated));
+    }
+  };
+
+  const apagarItem = (id, isEnvelope) => {
+    if (isEnvelope) {
+      const updated = envelopes.filter(env => env.id !== id);
+      setEnvelopes(updated);
+      localStorage.setItem("envelopes", JSON.stringify(updated));
+    } else {
+      const updated = encomendas.filter(enc => enc.id !== id);
+      setEncomendas(updated);
+      localStorage.setItem("encomendas", JSON.stringify(updated));
+    }
+  };
+
+  const copiarInformacoes = (item, isEnvelope) => {
+    const texto = `Nome: ${item.nome}\nDescrição: ${item.descricao}\nAP: ${item.apartamento}\nBloco: ${item.bloco}${item.compartimento ? "\nCompartimento: " + item.compartimento : ""}`;
     navigator.clipboard.writeText(texto);
   };
 
-  const alterarStatus = (id) => {
-    const updatedEncomendas = encomendas.map((enc) =>
-      enc.id === id ? { ...enc, status: enc.status === "postado" ? "entregue" : "postado" } : enc
-    );
-    setEncomendas(updatedEncomendas);
-    localStorage.setItem("encomendas", JSON.stringify(updatedEncomendas));
+  const filtrarItens = (items) => {
+    const filtered = items.filter(item => {
+      const searchFields = [item.nome, item.apartamento, item.bloco];
+      return searchFields.some(field =>
+        field.toLowerCase().includes(pesquisa.toLowerCase())
+      );
+    });
+    return filtered.sort((a, b) => {
+      if (a.status === b.status) return b.id - a.id;
+      return a.status === "postado" ? -1 : 1;
+    });
   };
-
-  const apagarEncomenda = (id) => {
-    const updatedEncomendas = encomendas.filter((enc) => enc.id !== id);
-    setEncomendas(updatedEncomendas);
-    localStorage.setItem("encomendas", JSON.stringify(updatedEncomendas));
-  };
-
-  const toggleTheme = () => {
-    setDarkMode(!darkMode);
-  };
-
-  const handlePesquisaChange = (e) => {
-    setPesquisa(e.target.value);
-  };
-
-  const encomendasFiltradas = encomendas.filter((enc) =>
-    enc.nome.toLowerCase().includes(pesquisa.toLowerCase()) ||
-    enc.apartamento.toLowerCase().includes(pesquisa.toLowerCase()) ||
-    enc.bloco.toLowerCase().includes(pesquisa.toLowerCase())
-  );
-
-  // Ordenação: as postadas ficam em cima, entregues vão para baixo
-  const encomendasOrdenadas = [...encomendasFiltradas].sort((a, b) => {
-    if (a.status === b.status) {
-      return b.id - a.id;
-    }
-    return a.status === "postado" ? -1 : 1;
-  });
 
   return (
-    <div style={{ fontFamily: "Arial, sans-serif", backgroundColor: darkMode ? "#121212" : "#f4f4f9", color: darkMode ? "#fff" : "#333", minHeight: "100vh", padding: "20px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-      <h1 style={{ color: "#6a1b9a", textAlign: "center", marginBottom: "20px" }}>EncomendasFRJ</h1>
-
-      {/* Barra de pesquisa */}
-      <input
-        value={pesquisa}
-        onChange={handlePesquisaChange}
-        placeholder="Pesquisar por nome, bloco ou apartamento"
-        style={{
-          padding: "10px",
-          marginBottom: "20px",
-          width: "100%",
-          maxWidth: "500px",
-          border: "1px solid #ddd",
-          borderRadius: "4px",
-          backgroundColor: darkMode ? "#555" : "#fff",
-          color: darkMode ? "#fff" : "#333",
-          boxSizing: "border-box",
-          margin: "0 auto",
-        }}
-      />
-
-      {/* Botão de alternância de tema */}
+    <div className={`container ${darkMode ? 'container-dark' : 'container-light'}`}>
       <button
-        onClick={toggleTheme}
-        style={{
-          position: "absolute",
-          top: "20px",
-          right: "20px",
-          backgroundColor: darkMode ? "#1976d2" : "#ffb300",
-          color: "#fff",
-          border: "none",
-          padding: "12px 15px",
-          borderRadius: "50%",
-          cursor: "pointer",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
-          transition: "background-color 0.3s ease",
-          fontSize: "18px",
-        }}
+        onClick={() => setDarkMode(!darkMode)}
+        className={`theme-toggle ${darkMode ? 'theme-toggle-dark' : 'theme-toggle-light'}`}
       >
         {darkMode ? "🌙" : "🌞"}
       </button>
 
-      <div style={{ maxWidth: "500px", margin: "0 auto", padding: "20px", backgroundColor: darkMode ? "#333" : "#ffffff", borderRadius: "8px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
-        <input
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-          placeholder="Nome"
-          style={{ width: "100%", padding: "12px", margin: "10px 0", border: "1px solid #ddd", borderRadius: "4px", backgroundColor: darkMode ? "#555" : "#fff", color: darkMode ? "#fff" : "#333", boxSizing: "border-box" }}
-        />
-        
-        {/* Dois inputs lado a lado */}
-        <div style={{ display: "flex", justifyContent: "space-between", gap: "10px" }}>
-          <input
-            value={apartamento}
-            onChange={(e) => setApartamento(e.target.value)}
-            placeholder="Apartamento"
-            style={{ width: "48%", padding: "12px", border: "1px solid #ddd", borderRadius: "4px", backgroundColor: darkMode ? "#555" : "#fff", color: darkMode ? "#fff" : "#333" }}
-          />
-          <input
-            value={bloco}
-            onChange={(e) => setBloco(e.target.value)}
-            placeholder="Bloco"
-            style={{ width: "48%", padding: "12px", border: "1px solid #ddd", borderRadius: "4px", backgroundColor: darkMode ? "#555" : "#fff", color: darkMode ? "#fff" : "#333" }}
-          />
-        </div>
-
-        <input
-          value={descricao}
-          onChange={(e) => setDescricao(e.target.value)}
-          placeholder="Descrição"
-          style={{ width: "100%", padding: "12px", margin: "10px 0", border: "1px solid #ddd", borderRadius: "4px", backgroundColor: darkMode ? "#555" : "#fff", color: darkMode ? "#fff" : "#333", boxSizing: "border-box" }}
-        />
-        <select
-          value={compartimento}
-          onChange={(e) => setCompartimento(e.target.value)}
-          style={{ width: "100%", padding: "12px", margin: "10px 0", border: "1px solid #ddd", borderRadius: "4px", backgroundColor: darkMode ? "#555" : "#fff", color: darkMode ? "#fff" : "#333", boxSizing: "border-box" }}
-        >
-          <option value="">Selecione o compartimento</option>
-          {[...Array(14)].map((_, i) => (
-            <option key={i} value={`c${i + 1}`}>{`C${i + 1}`}</option>
-          ))}
-          <option value="Fora">Fora</option>
-        </select>
+      <div className="tab-container">
         <button
-          onClick={salvarEncomenda}
-          style={{
-            width: "100%",
-            padding: "12px",
-            backgroundColor: "#1976d2",
-            color: "#fff",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-            fontSize: "16px",
-            boxSizing: "border-box"
-          }}
+          onClick={() => setActiveTab("encomendas")}
+          className={`tab-button ${activeTab === "encomendas" ? 'tab-button-encomendas' : 'tab-button-encomendas-inactive'}`}
         >
-          Salvar
+          Encomendas
+        </button>
+        <button
+          onClick={() => setActiveTab("envelopes")}
+          className={`tab-button ${activeTab === "envelopes" ? 'tab-button-envelopes' : 'tab-button-envelopes-inactive'}`}
+        >
+          Envelopes
         </button>
       </div>
-      
-      <ul style={{ marginTop: "20px", padding: "0", listStyle: "none" }}>
-        {encomendasOrdenadas.map((enc) => (
-          <li
-            key={enc.id}
-            style={{
-              backgroundColor: darkMode ? "#444" : "#ffffff",
-              padding: "15px",
-              margin: "10px 0",
-              borderRadius: "8px",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              boxSizing: "border-box"
-            }}
-          >
-            <div style={{ fontWeight: "bold", fontSize: "16px", color: "#1976d2" }}>
-              {enc.nome}
-            </div>
-            <div style={{ fontSize: "14px", color: darkMode ? "#bbb" : "#555", marginBottom: "5px" }}>
-              <span>{enc.descricao}</span>
-            </div>
-            <div style={{ fontSize: "14px", color: darkMode ? "#bbb" : "#555", marginBottom: "5px" }}>
-              Bloco {enc.bloco} - AP{enc.apartamento} - Compartimento {enc.compartimento}
-            </div>
-            <div style={{ fontSize: "14px", color: enc.status === "postado" ? "#ffb300" : "#388e3c", fontWeight: "bold", marginBottom: "10px" }}>
-              Status: {enc.status}
-            </div>
-            <div>
-              <button
-                onClick={() => alterarStatus(enc.id)}
-                style={{ marginRight: "10px", padding: "5px 10px", backgroundColor: "#1976d2", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer" }}
-              >
-                {enc.status === "postado" ? "Marcar como entregue" : "Marcar como postado"}
-              </button>
-              <button
-                onClick={() => copiarInformacoes(enc)}
-                style={{ padding: "5px 10px", backgroundColor: "#388e3c", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer" }}
-              >
-                Copiar
-              </button>
-              <button
-                onClick={() => apagarEncomenda(enc.id)}
-                style={{ marginLeft: "10px", padding: "5px 10px", backgroundColor: "#d32f2f", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer" }}
-              >
-                Apagar
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
+
+      <input
+        value={pesquisa}
+        onChange={(e) => setPesquisa(e.target.value)}
+        placeholder="Pesquisar por nome, apartamento ou bloco"
+        className={`search-input ${darkMode ? 'search-input-dark' : 'search-input-light'}`}
+      />
+
+      <div className="slider-container">
+        <div className={`slider-content ${activeTab === "encomendas" ? 'slider-content-encomendas' : 'slider-content-envelopes'}`}>
+          <div className={`form-container ${darkMode ? 'form-container-dark' : 'form-container-light'}`}>
+            <EncomendaForm darkMode={darkMode} onSave={salvarEncomenda} />
+            <ul className="item-list">
+              {filtrarItens(encomendas).map(item => (
+                <li key={item.id} className={`item-card ${darkMode ? 'item-card-dark' : 'item-card-light'}`}>
+                  <div className="item-title item-title-encomendas">{item.nome}</div>
+                  <div className={`item-description ${darkMode ? 'item-description-dark' : 'item-description-light'}`}>
+                    {item.descricao}
+                  </div>
+                  <div className={`item-description ${darkMode ? 'item-description-dark' : 'item-description-light'}`}>
+                    Bloco {item.bloco} - AP{item.apartamento} - Compartimento {item.compartimento}
+                  </div>
+                  <div className={`item-status ${item.status === "postado" ? 'item-status-posted' : 'item-status-delivered'}`}>
+                    {item.status === "entregue" && <span className="status-indicator"></span>}
+                    Status: {item.status}
+                  </div>
+                  <div>
+                    <button
+                      onClick={() => alterarStatus(item.id, false)}
+                      className={`action-button ${item.status === "entregue" ? "action-button-delivered" : "action-button-status-encomendas"}`}
+                    >
+                      {item.status === "postado" ? "Marcar como entregue" : "Marcar como postado"}
+                    </button>
+                    <button onClick={() => copiarInformacoes(item, false)} className="action-button action-button-copy">
+                      Copiar
+                    </button>
+                    <button onClick={() => apagarItem(item.id, false)} className="action-button action-button-delete">
+                      Apagar
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className={`form-container ${darkMode ? 'form-container-dark' : 'form-container-light'}`}>
+            <EnvelopeForm darkMode={darkMode} onSave={salvarEnvelope} />
+            <ul className="item-list">
+              {filtrarItens(envelopes).map(item => (
+                <li key={item.id} className={`item-card ${darkMode ? 'item-card-dark' : 'item-card-light'}`}>
+                  <div className="item-title item-title-envelopes">{item.nome}</div>
+                  <div className={`item-description ${darkMode ? 'item-description-dark' : 'item-description-light'}`}>
+                    {item.descricao}
+                  </div>
+                  <div className={`item-description ${darkMode ? 'item-description-dark' : 'item-description-light'}`}>
+                    Bloco {item.bloco} - AP{item.apartamento} - Compartimento {item.compartimento}
+                  </div>
+                  <div className={`item-status ${item.status === "postado" ? 'item-status-posted' : 'item-status-delivered'}`}>
+                    {item.status === "entregue" && <span className="status-indicator"></span>}
+                    Status: {item.status}
+                  </div>
+                  <div>
+                    <button
+                      onClick={() => alterarStatus(item.id, true)}
+                      className={`action-button ${item.status === "entregue" ? "action-button-delivered" : "action-button-status-envelopes"}`}
+                    >
+                      {item.status === "postado" ? "Marcar como entregue" : "Marcar como postado"}
+                    </button>
+                    <button onClick={() => copiarInformacoes(item, true)} className="action-button action-button-copy">
+                      Copiar
+                    </button>
+                    <button onClick={() => apagarItem(item.id, true)} className="action-button action-button-delete">
+                      Apagar
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

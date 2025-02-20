@@ -1,38 +1,316 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+/* Container styles */
+.container {
+  font-family: Arial, sans-serif;
   min-height: 100vh;
+  padding: 20px;
+  position: relative;
+}
+
+.container-light {
+  background-color: #f4f4f9;
+  color: #333;
+}
+
+.container-dark {
+  background-color: #121212;
+  color: #fff;
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  border: none;
+  padding: 12px 15px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease;
+  font-size: 18px;
+}
+
+.theme-toggle-light {
+  background-color: #ffb300;
+  color: #fff;
+}
+
+.theme-toggle-dark {
+  background-color: #1976d2;
+  color: #fff;
+}
+
+/* Tab navigation */
+.tab-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.tab-button {
+  padding: 10px 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.tab-button-encomendas {
+  background-color: #1976d2;
+  color: #fff;
+}
+
+.tab-button-encomendas-inactive {
+  background-color: #ccc;
+  color: #333;
+}
+
+.tab-button-envelopes {
+  background-color: #ffb300;
+  color: #fff;
+}
+
+.tab-button-envelopes-inactive {
+  background-color: #ccc;
+  color: #333;
+}
+
+/* Search input */
+.search-input {
+  padding: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 500px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  display: block;
+  margin: 0 auto 20px auto;
+}
+
+.search-input-light {
+  background-color: #fff;
+  color: #333;
+}
+
+.search-input-dark {
+  background-color: #555;
+  color: #fff;
+}
+
+/* Slider container */
+.slider-container {
+  width: 100%;
+  max-width: 500px;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.slider-content {
+  display: flex;
+  width: 200%;
+  transition: transform 0.5s ease;
+}
+
+.slider-content-encomendas {
+  transform: translateX(0);
+}
+
+.slider-content-envelopes {
+  transform: translateX(-50%);
+}
+
+/* Form containers */
+.form-container {
+  width: 50%;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-container-light {
+  background-color: #ffffff;
+}
+
+.form-container-dark {
+  background-color: #333;
+}
+
+/* Form headings */
+.form-heading {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-heading-encomendas {
+  color: #1976d2;
+}
+
+.form-heading-envelopes {
+  color: #ffb300;
+}
+
+/* Form inputs */
+.form-input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form-input-light {
+  background-color: #fff;
+  color: #333;
+}
+
+.form-input-dark {
+  background-color: #555;
+  color: #fff;
+}
+
+/* Input group */
+.input-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.input-group-item {
+  width: 48%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* Submit buttons */
+.submit-button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  box-sizing: border-box;
+  color: #fff;
+}
+
+.submit-button-encomendas {
+  background-color: #1976d2;
+}
+
+.submit-button-envelopes {
+  background-color: #ffb300;
+}
+
+/* Item lists */
+.item-list {
+  margin-top: 20px;
+  padding: 0;
+  list-style: none;
+}
+
+.item-card {
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: flex-start;
+  box-sizing: border-box;
 }
 
-.App-link {
-  color: #61dafb;
+.item-card-light {
+  background-color: #ffffff;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.item-card-dark {
+  background-color: #444;
+}
+
+/* Item content */
+.item-title {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.item-title-encomendas {
+  color: #1976d2;
+}
+
+.item-title-envelopes {
+  color: #ffb300;
+}
+
+.item-description {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.item-description-light {
+  color: #555;
+}
+
+.item-description-dark {
+  color: #bbb;
+}
+
+.item-status {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.item-status-posted {
+  color: #ffb300;
+}
+
+.item-status-delivered {
+  color: #388e3c;
+}
+
+/* Action buttons */
+.action-button {
+  padding: 5px 10px;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.action-button:last-child {
+  margin-right: 0;
+}
+
+.action-button-status-encomendas {
+  background-color: #1976d2;
+}
+
+.action-button-status-envelopes {
+  background-color: #ffb300;
+}
+
+.action-button-copy {
+  background-color: #388e3c;
+}
+
+.action-button-delete {
+  background-color: #d32f2f;
+  margin-left: 10px;
+}
+.action-button-delivered {
+  background-color: green;
+}
+.status-indicator {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: #388e3c;
+  border-radius: 50%;
+  margin-right: 5px;
 }
